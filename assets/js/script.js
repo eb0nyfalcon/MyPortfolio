@@ -157,3 +157,32 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+// Contact Form EmailJS Integration
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  // Show sending status
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<ion-icon name="hourglass-outline"></ion-icon><span>Sending...</span>';
+  submitBtn.disabled = true;
+
+  // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual EmailJS service and template IDs
+  emailjs.sendForm('service_n2g8caf', 'template_m7mcown', this)
+    .then(function() {
+      submitBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon><span>Sent Successfully!</span>';
+      document.getElementById('contact-form').reset();
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }, 3000);
+    }, function(error) {
+      submitBtn.innerHTML = '<ion-icon name="alert-outline"></ion-icon><span>Failed to send</span>';
+      console.log('FAILED...', error);
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }, 3000);
+    });
+});
